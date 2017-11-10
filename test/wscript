@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Roman C. Podolski <mailto:roman.podolski@tum.de>
+
+from waflib import Logs
+import os
+
+def options(opt):
+    opt.load('compiler_cxx')
+    opt.load('waf_unit_test')
+    opt.add_option('--onlytests', action='store_true', default=True, help='Exec unit tests only', dest='only_tests')
+
+
+def configure(conf):
+    conf.check(lib='gtest', uselib_store='GTEST')
+    conf.check(lib='gtest_main', uselib_store='GTEST_MAIN')
+    conf.check(lib='gmock', uselib_store='GMOCK')
+    conf.check(lib='pthread', uselib_store='PTHREAD')
+
+
+def gtest_results(bld):
+    lst = getattr(bld, 'utest_results', [])
+    if not lst:
+        return
+    for (f, code, out, err) in lst:
+        if not code:
+            continue
+
+        # uncomment if you want to see what's happening
+        print(str(out, 'utf-8'))
+        output = str(out, 'utf-8').splitlines()
+        for i, line in enumerate(output):
+            if '[ RUN      ]' in line and code:
+                i += 1
+                if '    OK ]' in output[i]:
+                    continue
+                while not '[ ' in output[i]:
+                    Logs.warn(output[i])
+                    i += 1
+            elif ' FAILED  ]' in line and code:
+                Logs.error(line)
+            elif ' PASSED  ]' in line:
+                Logs.info(line)
+
+def build(bld):
+    for t in bld.path.ant_glob("**/*_test.cc"):
+        filename, _ = os.path.splitext(t.name)
+        bld.program(
+            features='test',
+            source=[t],
+            includes='../include ../3rdparty ../proto',
+            target=filename,
+            use='GTEST_MAIN GTEST PTHREAD'
+        )
+
+    # unittestw.summary is a pretty ugly function for displaying a report (feel free to improve!)
+    # results -> bld.utest_results [(filename, returncode, stdout, stderr), (..., ), ...]
+    #bld.add_post_fun(waf_unit_test.summary)
+    bld.add_post_fun(gtest_results)
+
+    # to execute all tests:
+    # $ waf --alltests
+    # to set this behaviour permanenly:
+    bld.options.all_tests = True

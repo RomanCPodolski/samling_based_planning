@@ -1,0 +1,13 @@
+#include "planner/map.h"
+#include <gtest/gtest.h> // googletest header file
+
+#include <string>
+using std::string;
+
+const char *actualValTrue = "hello gtest";
+const char *actualValFalse = "hello world";
+const char *expectVal = "hello gtest";
+
+TEST(Map, CStrEqual) { EXPECT_STREQ(expectVal, actualValTrue); }
+
+TEST(Map, CStrNotEqual) { EXPECT_STRNE(expectVal, actualValFalse); }
