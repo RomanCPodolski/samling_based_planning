@@ -1,0 +1,107 @@
+\form#0:$t$
+\form#1:$t \in [0,N]$
+\form#2:$N$
+\form#3:$s$
+\form#4:$s \in [0,L]$
+\form#5:$L$
+\form#6:$s \notin [0,L] $
+\form#7:\[ \kappa_b = \frac{x'y'' - x''y'}{(x'^2+y'^2)^\frac{3}{2}} \]
+\form#8:\[\tan(\theta) = \frac{y'}{x'} \rightarrow \theta = \mathrm{atan2}(y',x')\]
+\form#9:$x' = \cos(\theta)$
+\form#10:$y' = \sin(\theta)$
+\form#11:\[A(N)\]
+\form#12:$A(\cdot)$
+\form#13:$q$
+\form#14:\[\min_{s \in [0,L]} d(s) = (x_v - x(t))^2 + (y_v - y(t))^2\]
+\form#15:\[\frac{\mathrm{d}}{\mathrm{d}s}d(s) = 2(x_v - x(t))x'(t) + 2(y_v - y(t))y'(t)\]
+\form#16:\[ P(s) = Q(A^{-1}) = (x(A^{-1}),y(A^{-1}))\]
+\form#17:$t \notin [0,N] $
+\form#18:\[ Q(t) = (x(t), y(t)) \]
+\form#19:$Q(t)$
+\form#20:\[\frac{\mathrm{d}}{\mathrm{d}t}Q(t)=\left(\frac{\mathrm{d}}{\mathrm{d}t}x(t),\frac{\mathrm{d}}{\mathrm{d}t}y(t)\right) = (x'(t), y'(t)) \]
+\form#21:\[\frac{\mathrm{d}^2}{\mathrm{d}t^2}Q(t)=\left(\frac{\mathrm{d}^2}{\mathrm{d}t^2}x(t),\frac{\mathrm{d}^2}{\mathrm{d}^2t}y(t)\right) = (x''(t), y''(t))\]
+\form#22:$P(s)$
+\form#23:\[\frac{\mathrm{d}}{\mathrm{d}s}P(s)= \frac{\mathrm{d}}{\mathrm{d}t}Q(A^{-1}(s))\]
+\form#24:\[\frac{\mathrm{d}^2}{\mathrm{d}s^2}P(s)= \frac{\mathrm{d}^2}{\mathrm{d}t^2}Q(A^{-1}(s))\]
+\form#25:$ A: t \in [0,N] \rightarrow s \in [0,L] $
+\form#26:\[ s = A(t) = \int^t_{t_0} \sqrt{((x'(t))^2 + (y'(t))^2)}\mathrm{d}t \]
+\form#27:$\mathcal{O}(n\log(n))$
+\form#28:$ A^{-1}: s \in [0,L] \rightarrow t \in [0,N] $
+\form#29:\[ t = A^{-1}(s) \]
+\form#30:$x(t)$
+\form#31:$Q(t) = (x(t), y(t))$
+\form#32:$y(t)$
+\form#33:\[ q(s) = a(s - s_i)^3 + b(s - s_i)^2 + c(s - s_i) + d \]
+\form#34:\begin{eqnarray*} q(s_i) &=& q_i \\ q(s_f) &=& q_f \\ \frac{\mathrm{d}}{\mathrm{d}s}q(s_i) &=& \tan(\Delta \theta) \\ \frac{\mathrm{d}}{\mathrm{d}s}q(s_i) &=& 0 \\ \end{eqnarray*}
+\form#35:$s_i \in [0,L] $
+\form#36:$s_f \in [0,L] \wedge s_f > s_i $
+\form#37:$q_i \in [-q_\mathrm{max}, q_\mathrm{max}]$
+\form#38:$q_f \in [-q_\mathrm{max}, q_\mathrm{max}]$
+\form#39:$ \Delta \theta $
+\form#40:$ q_i [m] $
+\form#41:$ q_f [m] $
+\form#42:$ s_i [m] $
+\form#43:$ v [m/s] $
+\form#44:$\theta$
+\form#45:$ \Delta s = s_f - s_i $
+\form#46:\[ \begin{bmatrix} 0 & 0 & 0 & 1 \\ \Delta s^3 & \Delta s^2 & \Delta s & 1 \\ 0 & 0 & 1 & 0 \\ 3\Delta s^2 & 2\Delta s & 1 & 0 \\ \end{bmatrix} \begin{bmatrix} a \\ b \\ c \\ d \end{bmatrix} = \begin{bmatrix} q_i \\ q_f \\ \tan(\Delta \theta) \\ 0.0 \end{bmatrix} \]
+\form#47:$s_i < s_f$
+\form#48:$ \Delta s > 0 $
+\form#49:\[ \bm{A}\bm{b}= \bm{c} \rightarrow \bm{c} = \bm{A}^{-1}\bm{c} \]
+\form#50:$ s_f $
+\form#51:$v$
+\form#52:$k_v$
+\form#53:$\Delta s_\mathrm{min}$
+\form#54:\[ s_f = s_i + \underbrace{k_v v + \Delta s_\mathrm{min}}_{\Delta s} \]
+\form#55:$\Delta s_\mathrm{min} [m]$
+\form#56:$ \in [0,L] $
+\form#57:$s \notin [0,L]$
+\form#58:\[ \kappa = \frac{S}{Q}\left(\frac{(1-q\kappa_b)\frac{\mathrm{d}^2q}{\mathrm{d}s^2}+\kappa_s\left(\frac{\mathrm{d}q}{\mathrm{d}s}\right)^2}{Q^2}\right) \]
+\form#59:$ s_i $
+\form#60:$ q_i $
+\form#61:$ q_f $
+\form#62:\[\left\{q(s) < \kappa_b(s)^{-1} \wedge |\kappa| \leq \kappa_\mathrm{max} \; | \; \forall s \in [s_i, s_f]\right\}\]
+\form#63:$ \Phi: m \in \mathcal{M} \rightarrow s \in [0,L] $
+\form#64:$w_s$
+\form#65:$C_s$
+\form#66:$C_\kappa$
+\form#67:$C_c$
+\form#68:\[ J = w_sC_s + w_\kappa C_\kappa + w_cC_c \]
+\form#69:$ C_s $
+\form#70:$ \sigma $
+\form#71:\[ \sum_{i = 1}^N \Phi(m_i)g(q_{i,f};\mu = q_f, \sigma^2) \]
+\form#72:$\Phi: m \rightarrow \{0,1\} $
+\form#73:$ m \in \mathcal{M} $
+\form#74:$ \mathcal{M} $
+\form#75:$g(x; \mu, \sigma) $
+\form#76:$\mathcal{N}(\mu,\sigma)$
+\form#77:$m_i \in \mathcal{M}$
+\form#78:$ q_{i,f} $
+\form#79:$m_i$
+\form#80:$ q_f$
+\form#81:$ C_\kappa $
+\form#82:\[ C_\kappa = \int \kappa^2(s)\; \mathrm{d}s_p = \int \kappa^2(s)Q(s)\; \mathrm{d}s \]
+\form#83:$ s_1 \geq s_2 \vee s_1 \notin [0,L] \vee s_2 \notin [0,L] $
+\form#84:$|q - q_p|$
+\form#85:\[ C_c = \frac{1}{s_2 - s_1} \int^{s_2}_{s_1} |q(s) - q_p(s)| \;\mathrm{d}s \]
+\form#86:$s_1$
+\form#87:$s_2$
+\form#88:$q: s \in [0, L] \rightarrow q \in [-q_\mathrm{max},q_\mathrm{max}]$
+\form#89:$q_p: s \in [0, L] \rightarrow q_p \in [-q_\mathrm{max},q_\mathrm{max}]$
+\form#90:\[ \dot{x}=v\cos\theta, \qquad \dot{y}=v\sin\theta, \qquad \dot{\theta}=v\kappa \]
+\form#91:$\kappa$
+\form#92:\[ v = SQ\frac{\mathrm{d}s}{\mathrm{d}t} \]
+\form#93:\[ \frac{\mathrm{d}x}{\mathrm{d}s}=Q\cos\theta, \qquad \frac{\mathrm{d}y}{\mathrm{d}s}=Q\sin\theta, \qquad \frac{\mathrm{d}\theta}{\mathrm{d}s}=Q\kappa \]
+\form#94:$\left\{q(s) < \kappa_b(s)^{-1} \wedge |\kappa| \leq \kappa_\mathrm{max} \; | \; \forall s \in [s_i, s_f]\right\}$
+\form#95:\[ Q = \sqrt{\left(\frac{\mathrm{d}q}{\mathrm{d}s}\right)^2+(1-q\kappa_b)^2} \]
+\form#96:$ s \notin [0,L] $
+\form#97:\[ S = \mathrm{sgn}(1 - q\kappa_b) \]
+\form#98:$q: s \in [s_i,\infty] \rightarrow q \in [q_i, q_f]$
+\form#99:$ s < s_i $
+\form#100:\[ q(s) = \begin{cases} a(s - s_i)^3 + b(s - s_i)^2 + c(s - s_i) + d, &\text{ if } s_i \leq s < s_f\\ q_f, &\text{ if } s_f \leq s \end{cases} \]
+\form#101:\[ \frac{\mathrm{d}}{\mathrm{d}s}q(s) = \begin{cases} 3a(s - s_i)^2 + 2b(s - s_i) + c, &\text{ if } s_i \leq s < s_f\\ 0, &\text{ if } s_f \leq s \end{cases} \]
+\form#102:\[ \frac{\mathrm{d^2}}{\mathrm{d}s^2}q(s) = \begin{cases} 6a(s - s_i) + 2b, &\text{ if } s_i \leq s < s_f\\ 0, &\text{ if } s_f \leq s \end{cases} \]
+\form#103:$q_f$
+\form#104:$s_i$
+\form#105:$s_f$
+\form#106:$k_\mathrm{max}$
