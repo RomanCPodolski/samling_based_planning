@@ -82,7 +82,8 @@ point Baseframe::Q_pprime(const double t) const {
 
 double Baseframe::theta_Q(const double t) const {
   auto p = Q_prime(t);
-  return atan2(p.y(), p.x());
+  // return atan2(p.y(), p.x());
+  return atan(p.y() / p.x());
 }
 
 static std::map<double, double> _A_lut{{0, 0}};
@@ -202,7 +203,7 @@ std::pair<double, double> Baseframe::localize(const point position,
   if (upper_barrier > length()) upper_barrier = length();
 
   auto result = newton_raphson_iterate(
-      D_prime, lower_barrier, initial_guess, length(),
+      D_prime, lower_barrier, initial_guess, upper_barrier,
       std::numeric_limits<double>::digits / 2, iterations);
 
   auto p = P(result);

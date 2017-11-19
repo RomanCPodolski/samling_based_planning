@@ -8,25 +8,20 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <gflags/gflags.h>
+#include <glog/logging.h>
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/math/constants/constants.hpp>
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 #include <iostream>
 #include <string>
 #include <vector>
+#include "planner/typedefs.h"
 
 DECLARE_string(map);
 
 namespace planner {
-
-namespace bg = boost::geometry;
-namespace bgi = boost::geometry::index;
-
-typedef bg::model::d2::point_xy<double> point;
-typedef bg::model::polygon<point> polygon;
 
 // TODO(roman): add structs for waypoints and fenceposts and define how to
 // implicit cast them in required types like double* or matlab*
@@ -43,14 +38,14 @@ typedef bg::model::polygon<point> polygon;
  *  Detailed description
  */
 class Map {
-private:
+ private:
   std::vector<double> _waypoints_x;
   std::vector<double> _waypoints_y;
   std::vector<double> _fenceposts_x;
   std::vector<double> _fenceposts_y;
   std::pair<double, double> _datum;
 
-public:
+ public:
   explicit Map(std::string path = FLAGS_map);
   virtual ~Map() {}
   void load(std::string path = FLAGS_map);
@@ -104,6 +99,6 @@ public:
   }
 };
 
-} // namespace planner
+}  // namespace planner
 
 #endif /* !MAP_H */

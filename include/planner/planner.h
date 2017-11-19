@@ -17,10 +17,10 @@
 #include <string>
 #include <utility>
 #include <vector>
-//#include "planner/abstract_planner.h"
 #include "planner/baseframe.h"
 #include "planner/maneuver.h"
 #include "planner/map.h"
+#include "planner/typedefs.h"
 
 DECLARE_double(max_steering_angle);
 DECLARE_double(max_manouver_offset);

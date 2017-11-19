@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 #include "planner/map.h"
+#include "planner/typedefs.h"
 
 namespace planner {
 

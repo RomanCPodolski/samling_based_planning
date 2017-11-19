@@ -1,11 +1,13 @@
-#ifndef TEX_H
-#define TEX_H
+#ifndef BEAMER_H
+#define BEAMER_H
 
 #include <boost/format.hpp>
 #include <iostream>
 #include "planner/baseframe.h"
+#include "planner/car.h"
 #include "planner/maneuver.h"
 #include "planner/planner.h"
+#include "planner/pose.h"
 
 namespace planner {
 namespace io {
@@ -27,8 +29,10 @@ class beamer_mapper {
     _os << "\\usepackage[svgnames]{xcolor}\n";
     _os << "% Settings for pgfplots\n";
     _os << "\\pgfplotsset{compat=1.9}\n";
-    _os << "\\pgfplotsset{cycle list={black}}\n";
+    _os << "\\pgfplotsset{cycle "
+           "list={CornflowerBlue\\\\Dandelion\\\\ForestGreen\\\\BrickRed}}\n";
     _os << "\\begin{document}\n";
+    _os << "\\begin{frame}\n";
     _os << "\\begin{tikzpicture}[scale=1.0]\n";
     _os << boost::format("\\begin{axis}[%s]\n") % _axis_props;
   }
@@ -58,8 +62,12 @@ class beamer_mapper {
   }
 
   void map(Maneuver m, std::string props = "color=black") {
+    map(m.path(), props);
+  }
+
+  void map(std::vector<pose> path, std::string props = "color=black") {
     _os << boost::format("\\addplot[%s] coordinates {\n") % props;
-    for (auto point : m.path()) {
+    for (auto point : path) {
       _os << boost::format("(%d,%d)\n") % point.x() % point.y();
     }
     _os << "};\n";
@@ -83,22 +91,8 @@ class beamer_mapper {
   }
 
   void map(const pose &pose, std::string props = "") {
-    const double l = 3, w = 2;
-    polygon car, foo, baa;
-    car.outer().push_back(point(-l / 2, -w / 2));
-    car.outer().push_back(point(+l / 2, -w / 2));
-    car.outer().push_back(point(+l / 2, +w / 2));
-    car.outer().push_back(point(-l / 2, +w / 2));
-    car.outer().push_back(point(-l / 2, -w / 2));  // close the polygon
-
-    bg::strategy::transform::rotate_transformer<planner::bg::radian, double, 2,
-                                                2>
-        rotate(-pose.theta);
-    bg::strategy::transform::translate_transformer<double, 2, 2> translate(
-        pose.x(), pose.y());
-    bg::transform(car, foo, rotate);     // rotate first...
-    bg::transform(foo, baa, translate);  // ...then translate
-    map(baa, props);
+    Car car;
+    map(car.obb(pose), props);
   }
 
   void map(box b, std::string props = "") {
@@ -116,4 +110,4 @@ class beamer_mapper {
 }  // namespace io
 }  // namespace planner
 
-#endif /* TEX_H */
+#endif /* BEAMER_H */

@@ -18,54 +18,24 @@
 #include <exception>
 #include <memory>
 #include "planner/baseframe.h"
-
-namespace planner {
+#include "planner/pose.h"
+#include "planner/typedefs.h"
 
 DECLARE_double(min_manouver_length);
 DECLARE_double(manouver_speed_gain);
-DECLARE_double(path_granularity);
+DECLARE_double(granularity);
 DECLARE_double(collision_standart_deviation);
 DECLARE_double(max_curvature);
 DECLARE_double(weight_safety);
 DECLARE_double(weight_smoothness);
 DECLARE_double(weight_consistency);
 
-namespace bg = boost::geometry;
-namespace bgi = boost::geometry::index;
-
-typedef std::vector<double> state_type;  ///< state used in Maneuver::path
-typedef bg::model::box<point> box;       ///< aabb in Maneuver::collision
-typedef std::pair<box, std::shared_ptr<polygon>> value;  ///< see Rtree
-typedef bgi::rtree<value, bgi::quadratic<16>> Rtree;     ///< Spatial index
+namespace planner {
 
 using boost::math::sign;
 using boost::math::quadrature::trapezoidal;
 using boost::geometry::distance;
 using boost::math::normal;
-
-/*! \struct pose
- *  \brief A vehicle pose
- *
- *  The pose of a vehicle consits of its position and orientation in Carthesian
- * space.
- *  The pose can also store the position of the vehicle in curvinilear
- * coordinates, if known.
- */
-struct pose {
-  point position; /*!< position of the vehicle in cartesian coordinates */
-  double theta;   /*!< heading of the vehicle*/
-  double s;       /*!< arc-length s along the baseframe in [m] */
-  double q;       /*!< offset from the baseframe in [m] */
-
-  /*! \brief getter for the x-coordinate of the position in
-   * Carthesian-coordinates [m].
-   */
-  double x() const { return position.x(); }
-  /*! \brief getter for the y-coordinate of the position in
-   * Carthesian-coordinates [m].
-   */
-  double y() const { return position.y(); }
-};
 
 /*! \class Maneuver
  *  \brief A Maneuver describes a path in curvilinear- and carthesian

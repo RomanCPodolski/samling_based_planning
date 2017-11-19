@@ -12,21 +12,22 @@
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 #include "planner/baseframe.h"
+#include "planner/car.h"
 
-namespace planner {
-
-DEFINE_double(min_manouver_length, 10.0, "Minimal length of manouver in [m]");
+DEFINE_double(min_manouver_length, 20.0, "Minimal length of manouver in [m]");
 DEFINE_double(manouver_speed_gain, 1.0,
               "Gain of manouver length from vehicle speed");
-DEFINE_double(weight_safety, 1.0 / 3.0, "weigthing factor for the safety cost");
-DEFINE_double(weight_smoothness, 1.0 / 3.0,
+DEFINE_double(weight_safety, 1.0, "weigthing factor for the safety cost");
+DEFINE_double(weight_smoothness, 1.0,
               "weigthing factor for the smoothness cost");
-DEFINE_double(weight_consistency, 1.0 / 3.0,
+DEFINE_double(weight_consistency, 1.0,
               "weigthing factor for the consistency cost");
-DEFINE_double(path_granularity, 1.0, "Stepsize of the path generation");
+DEFINE_double(granularity, 1.0, "Stepsize of the path generation");
 DEFINE_double(collision_standart_deviation, 1.0,
               "standart deviation of risk of collision");
 DEFINE_double(max_curvature, 0.5, "standart deviation of risk of collision");
+
+namespace planner {
 
 Maneuver::Maneuver(const point position, const double heading,
                    const double velocity, const double q_i, const double q_f,
@@ -67,6 +68,7 @@ double Maneuver::q(double s) const {
   } else if (_s_f <= s) {
     result = _q_f;
   } else {
+    // result = _d;
     throw std::domain_error("q is not defined for s < " + std::to_string(_s_i));
   }
   return result;
@@ -81,6 +83,7 @@ double Maneuver::dq(double s) const {
   } else if (_s_f <= s) {
     result = 0.0;  // this is redundant - but makes the code more readable
   } else {
+    // result = 0.0;  // this is redundant - but makes the code more readable
     throw std::domain_error("dq/ds is not defined for s < " +
                             std::to_string(_s_i));
   }
@@ -96,6 +99,7 @@ double Maneuver::ddq(double s) const {
   } else if (_s_f <= s) {
     result = 0.0;  // this is redundant - but makes the code more readable
   } else {
+    // result = 0.0;  // this is redundant - but makes the code more readable
     throw std::domain_error("d^2q/ds^2 is not defined for s < " +
                             std::to_string(_s_i));
   }
@@ -139,7 +143,7 @@ std::vector<pose> Maneuver::path() {
   // TODO(roman): make sure that the path does not extend L without setting s_f
   // to L
   if (_path.empty()) {
-    double ds = FLAGS_path_granularity;
+    double ds = FLAGS_granularity;
 
     state_type x_0 = {_position.x(), _position.y(), _heading};
 
@@ -148,7 +152,9 @@ std::vector<pose> Maneuver::path() {
       double K_b{_baseframe->curvature(s)};
       double K{curvature(s)};
 
-      if (q(s) >= 1 / K_b || fabs(K) > FLAGS_max_curvature) _drivable = false;
+      if (fabs(q(s)) >= fabs(1 / K_b) || fabs(K) > FLAGS_max_curvature) {
+        _drivable = false;
+      }
 
       double Q_s{Q(s)};
       double theta{x[2]};
@@ -194,8 +200,9 @@ double Maneuver::C_c(const Maneuver &previous) const {
   const double s_1 = s_i();
   const double s_2 = s_f();
   // TODO(roman): handle this better!
-  if (s_1 > previous.s_f())
+  if (s_1 > previous.s_f()) {
     throw std::domain_error("Maneuvers do not overlap!");
+  }
   auto l = [this, &previous](double s) {
     point a(s, q(s));
     point b(s, previous.q(s));
@@ -211,37 +218,17 @@ double Maneuver::collision() {
   _collision_length = 0.0;
   _collision_checked = true;
 
-  const double l = 3;  // length of the car bounding box
-  const double w = 2;  // width of the car bounding box
-
-  polygon car;  // polygon that represents the dimensons of the car.
-  car.outer().push_back(point(-l / 2, -w / 2));
-  car.outer().push_back(point(+l / 2, -w / 2));
-  car.outer().push_back(point(+l / 2, +w / 2));
-  car.outer().push_back(point(-l / 2, +w / 2));
-  car.outer().push_back(point(-l / 2, -w / 2));  // close the polygon
+  Car car;
 
   for (const auto &p : path()) {
-    polygon oobb, tmp;  // object oriented bounding box
-    // transform vehicle bounding box to match pose
-    // roatate will perform a clockwise rotation around the origin, but the
-    // heading is defined anti-clockwise
-    bg::strategy::transform::rotate_transformer<bg::radian, double, 2, 2>
-        rotate(-p.theta);
-    bg::strategy::transform::translate_transformer<double, 2, 2> translate(
-        p.x(), p.y());
-    bg::transform(car, tmp, rotate);      // rotate first...
-    bg::transform(tmp, oobb, translate);  // ...then translate
-
-    box aabb = bg::return_envelope<box>(oobb);  // axis aligned bounding box
-
     // search spatial index for possible collisions
     std::vector<value> collision_risk;
-    _rtree->query(bgi::intersects(aabb), std::back_inserter(collision_risk));
+    _rtree->query(bgi::intersects(car.aabb(p)),
+                  std::back_inserter(collision_risk));
     // perfom the actual collision check.
     for (const auto &risk : collision_risk) {
       polygon obstacle{*risk.second};
-      if (bg::intersects(oobb, obstacle)) {  // collision detected
+      if (bg::intersects(car.obb(p), obstacle)) {  // collision detected
         _collision_length = p.s;  // return length at collison and stop loop.
         return _collision_length;
       }

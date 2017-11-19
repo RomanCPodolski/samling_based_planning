@@ -33,3 +33,59 @@ def build(bld):
         includes ='. ../include ../proto ../3rdparty',
         use='planner BOOST GLOG GFLAGS',
     )
+
+    bld.program(
+        features='cpplint',
+        target='simulation',
+        source='examples/simulation_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='effects_of_J',
+        source='examples/effects_of_J_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='bench_obstacles',
+        source='examples/benchmarks/bench_obstacles_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='bench_granularity',
+        source='examples/benchmarks/bench_granularity_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='bench_maneuvers',
+        source='examples/benchmarks/bench_maneuvers_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='bench_length',
+        source='examples/benchmarks/bench_min_length_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )
+
+    bld.program(
+        features='cpplint',
+        target='bench_gain',
+        source='examples/benchmarks/bench_gain_main.cc',
+        includes ='. ../include ../proto ../3rdparty',
+        use='planner BOOST GLOG GFLAGS',
+    )

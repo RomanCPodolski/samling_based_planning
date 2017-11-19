@@ -19,12 +19,11 @@
 #include "planner/maneuver.h"
 #include "planner/map.h"
 
+DEFINE_double(max_manouver_offset, 4, "maximum offset from baseframe");
+DEFINE_uint64(number_manouvers, 30, "how many manouvers should be considered");
+
 /// TODO(roman): add debug output using glog
 namespace planner {
-
-DEFINE_double(max_manouver_offset, 10.0, "maximum offset from baseframe");
-DEFINE_double(granularity, 1.0, "granularity");
-DEFINE_uint64(number_manouvers, 30, "how many manouvers should be considered");
 
 typedef bg::model::box<point> box;
 typedef std::pair<box, std::shared_ptr<polygon>> value;
